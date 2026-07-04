@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
 
 import { blogPosts as staticBlogPosts } from "@/content/blog";
-import { services as staticServices } from "@/content/services";
-import { getBlogPosts, getServices } from "@/lib/api";
+import { getBlogPosts } from "@/lib/api";
+import { loadSiteContent } from "@/lib/content";
 import { getSiteUrl } from "@/lib/site";
+import { getCanonicalServiceSlug } from "@/lib/url-governance";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl();
@@ -28,22 +29,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic routes: prefer API (Supabase-backed) but keep a safe static fallback.
   // Note: sitemap runs server-side; keep failures non-fatal.
   // We intentionally do not throw here.
-  const [servicesRes, blogRes] = await Promise.all([
-    getServices({ revalidate: 3600 }),
+  const [siteContent, blogRes] = await Promise.all([
+    loadSiteContent(),
     getBlogPosts({ revalidate: 3600 }),
   ]);
 
-  const services = servicesRes.ok
-    ? servicesRes.data
-    : staticServices.map((s) => ({ slug: s.slug }));
+  const serviceSlugs = Array.from(
+    new Set(siteContent.services_page.items.map((s) => getCanonicalServiceSlug(s.slug)))
+  );
 
   const blogPosts = blogRes.ok
     ? blogRes.data
     : staticBlogPosts.map((p) => ({ slug: p.slug, created_at: p.date }));
 
-  for (const s of services) {
+  for (const slug of serviceSlugs) {
     entries.push({
-      url: new URL(`/services/${s.slug}`, base).toString(),
+      url: new URL(`/services/${slug}`, base).toString(),
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,

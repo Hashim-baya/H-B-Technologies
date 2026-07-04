@@ -1,14 +1,13 @@
-import type { Metadata } from "next";
-
 import { ConsultationForm } from "@/components/ConsultationForm";
+import { createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Book Consultation",
   description:
     "Book a consultation with VIZIA Technologies for secure-by-design engineering and delivery planning.",
-  alternates: { canonical: "/book-consultation" },
-};
+  path: "/book-consultation",
+});
 
 export default function BookConsultationPage() {
   return (

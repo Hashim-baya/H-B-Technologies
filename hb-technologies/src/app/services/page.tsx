@@ -1,27 +1,28 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { loadSiteContent } from "@/lib/content";
+import { buildItemListJsonLd, createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Services",
   description:
     "Explore VIZIA Technologies services: web and mobile development, cyber security, data & AI, network engineering, automation, IoT, and Smart CCTV.",
-  alternates: { canonical: "/services" },
-  openGraph: {
-    type: "website",
-    title: "VIZIA Technologies Services",
-    description:
-      "Security-first engineering services across web, mobile, AI, infrastructure, and cyber security.",
-    url: "/services",
-  },
-};
+  path: "/services",
+});
 
 export const revalidate = 0;
 
 export default async function ServicesPage() {
   const c = await loadSiteContent();
   const { heading, lead, items } = c.services_page;
+  const itemListJsonLd = buildItemListJsonLd(
+    "VIZIA Technologies Services",
+    items.map((service) => ({
+      name: service.name,
+      description: service.summary,
+      path: `/services/${service.slug}`,
+    }))
+  );
 
   return (
     <section className="section">
@@ -44,6 +45,11 @@ export default async function ServicesPage() {
             </article>
           ))}
         </div>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
       </div>
     </section>
   );

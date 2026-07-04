@@ -24,7 +24,7 @@ const serviceLinks = [
   { href: "/services/cyber-security", label: "Cyber Security" },
   { href: "/services/artificial-intelligence", label: "AI & ML" },
   { href: "/services/iot-solutions", label: "IoT Solutions" },
-  { href: "/services/smart-cctv-installation", label: "Smart CCTV" },
+  { href: "/services/smart-cctv", label: "Smart CCTV" },
   { href: "/services/network-engineering", label: "Network Engineering" },
 ];
 

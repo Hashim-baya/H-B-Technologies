@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { getPostBySlug } from "@/content/blog";
-import { getSiteUrl } from "@/lib/site";
+import { absoluteUrl, buildBreadcrumbJsonLd, createPageMetadata } from "@/lib/seo";
 import { getBlogPost } from "@/lib/api";
 import marketing from "@/styles/marketing.module.css";
 
@@ -84,24 +84,13 @@ export async function generateMetadata({
   const post = await resolvePost(slug);
   if (!post) return {};
 
-  return {
+  return createPageMetadata({
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/blog/${post.slug}` },
-    openGraph: {
-      type: "article",
-      title: post.title,
-      description: post.excerpt,
-      url: `/blog/${post.slug}`,
-      images: post.featured_image ? [{ url: post.featured_image }] : undefined,
-    },
-    twitter: {
-      card: post.featured_image ? "summary_large_image" : "summary",
-      title: post.title,
-      description: post.excerpt,
-      images: post.featured_image ? [post.featured_image] : undefined,
-    },
-  };
+    path: `/blog/${post.slug}`,
+    type: "article",
+    images: post.featured_image ? [post.featured_image] : undefined,
+  });
 }
 
 function toDisplayDate(value?: string | null) {
@@ -133,7 +122,7 @@ export default async function BlogPostPage({
 
   const paragraphs = splitParagraphs(post.content);
 
-  const url = new URL(`/blog/${post.slug}`, getSiteUrl()).toString();
+  const url = absoluteUrl(`/blog/${post.slug}`);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -148,6 +137,11 @@ export default async function BlogPostPage({
     },
     keywords: post.tags.length ? post.tags.join(", ") : undefined,
   };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: post.title, path: `/blog/${post.slug}` },
+  ]);
 
   return (
     <article className="section">
@@ -196,6 +190,10 @@ export default async function BlogPostPage({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
       </div>
     </article>

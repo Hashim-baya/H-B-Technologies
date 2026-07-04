@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { fetchDevToArticleById } from "@/lib/external";
+import { createPageMetadata, noIndexFollowRobots, noIndexNoFollowRobots } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
 type PageProps = {
@@ -15,19 +16,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const article = await fetchDevToArticleById(id);
 
   if (!article) {
-    return { title: "Blog article" };
+    return createPageMetadata({
+      title: "Blog article unavailable",
+      description: "This external article is no longer available.",
+      path: `/blog/external/${id}`,
+      robots: noIndexNoFollowRobots,
+    });
   }
 
-  return {
+  return createPageMetadata({
     title: article.title,
-    description: article.description,
-    alternates: { canonical: `/blog/external/${id}` },
-    openGraph: {
-      title: article.title,
-      description: article.description,
-      images: article.cover_image ? [article.cover_image] : undefined,
-    },
-  };
+    description: article.description || "External article related to VIZIA Technologies service areas.",
+    path: `/blog/external/${id}`,
+    canonical: article.url || `/blog/external/${id}`,
+    type: "article",
+    images: article.cover_image ? [article.cover_image] : undefined,
+    robots: noIndexFollowRobots,
+  });
 }
 
 export default async function ExternalBlogDetailPage({ params }: PageProps) {

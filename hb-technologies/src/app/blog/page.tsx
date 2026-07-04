@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -6,21 +5,15 @@ import { blogPosts as staticBlogPosts } from "@/content/blog";
 import { getBlogPosts } from "@/lib/api";
 import { fetchDevToByTag } from '@/lib/external';
 import { services } from '@/content/services';
+import { buildBlogJsonLd, buildItemListJsonLd, createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Blog",
   description:
     "Practical notes on secure engineering, performance, Supabase RLS, and AI delivery.",
-  alternates: { canonical: "/blog" },
-  openGraph: {
-    type: "website",
-    title: "VIZIA Technologies Blog",
-    description:
-      "Practical notes on secure engineering, performance, Supabase RLS, and AI delivery.",
-    url: "/blog",
-  },
-};
+  path: "/blog",
+});
 
 export const revalidate = 60;
 
@@ -101,8 +94,8 @@ export default async function BlogIndexPage() {
     if (seen.has(e.url)) return false;
     seen.add(e.url);
     return true;
-  }).slice(0, 8).map((e) => ({
-    slug: `external-${encodeURIComponent(e.url)}`,
+  }).filter((e) => /^\d+$/.test(String(e.id))).slice(0, 8).map((e) => ({
+    slug: String(e.id),
     title: e.title,
     excerpt: e.description || '',
     featured_image: e.cover_image || undefined,
@@ -113,6 +106,16 @@ export default async function BlogIndexPage() {
 
   // Merge internal posts with external ones (external at the end)
   const allPosts: BlogCard[] = [...posts, ...externalDisplay];
+  const internalPostEntries = posts.map((post) => ({
+    name: post.title,
+    description: post.excerpt,
+    path: `/blog/${post.slug}`,
+  }));
+  const blogJsonLd = buildBlogJsonLd(internalPostEntries);
+  const itemListJsonLd = buildItemListJsonLd(
+    "VIZIA Technologies Blog Articles",
+    internalPostEntries
+  );
 
   return (
     <section className="section">
@@ -158,6 +161,15 @@ export default async function BlogIndexPage() {
             </article>
           ))}
         </div>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
       </div>
     </section>
   );

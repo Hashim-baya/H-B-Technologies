@@ -1,20 +1,13 @@
-import type { Metadata } from "next";
 import { loadSiteContent, type AboutCard } from "@/lib/content";
+import { createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "About",
   description:
     "VIZIA Technologies is a software engineering company delivering security-first product development, AI-powered innovation, and compliance-driven engineering standards.",
-  alternates: { canonical: "/about" },
-  openGraph: {
-    type: "website",
-    title: "About VIZIA Technologies",
-    description:
-      "Security-first engineering, AI development, and enterprise-grade technology delivery.",
-    url: "/about",
-  },
-};
+  path: "/about",
+});
 
 export const revalidate = 0;
 

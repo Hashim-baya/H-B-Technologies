@@ -1,28 +1,28 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import HeroSection from "@/components/HeroSection";
 import AnimateIn from "@/components/AnimateIn";
-import CountUp from "@/components/CountUp";
 import TeamCard from "@/components/TeamCard";
 import styles from "./page.module.css";
 import type { SiteContent } from "@/lib/content";
 import { loadSiteContent } from "@/lib/content";
+import { createPageMetadata } from "@/lib/seo";
 
 export const revalidate = 0;
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "VIZIA Technologies",
   description:
     "VIZIA Technologies is a software engineering company delivering security-first product development, AI-powered automation, and scalable enterprise systems.",
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    title: "VIZIA Technologies",
-    description: "Security-first engineering, AI-powered innovation, and scalable enterprise systems.",
-    url: "/",
-  },
-  keywords: ["software engineering company", "AI development firm", "cyber security specialists", "IoT solution provider", "enterprise software development"],
-};
+  path: "/",
+  absoluteTitle: true,
+  keywords: [
+    "software engineering company",
+    "AI development firm",
+    "cyber security specialists",
+    "IoT solution provider",
+    "enterprise software development",
+  ],
+});
 
 export default async function Home() {
   const c: SiteContent = await loadSiteContent();
@@ -153,7 +153,7 @@ export default async function Home() {
             {c.testimonials.items.map((t, i) => (
               <AnimateIn key={t.name} delay={i * 120} variant="up">
                 <figure className={`card ${styles.testimonialCard} ${styles.techCard}`}>
-                  <div className={styles.quoteIcon}>"</div>
+                  <div className={styles.quoteIcon}>&quot;</div>
                   <blockquote>
                     <p className={`muted ${styles.quoteText}`}>{t.quote}</p>
                   </blockquote>

@@ -1,20 +1,20 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ConsultationForm } from "@/components/ConsultationForm";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 import { WHATSAPP_DEFAULT_MESSAGE } from "@/lib/whatsapp";
 import { loadSiteContent } from "@/lib/content";
+import { createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
 export const revalidate = 0;
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: "Contact VIZIA Technologies | Consultation & Support",
   description:
     "Get in touch with VIZIA Technologies for AI, cybersecurity, web development, and enterprise IT solutions. Email us or book a consultation.",
-  alternates: { canonical: "/contact" },
-};
+  path: "/contact",
+});
 
 export default async function ContactPage() {
   const c = await loadSiteContent();

@@ -1,5 +1,13 @@
 import Link from "next/link";
+import { createPageMetadata, noIndexNoFollowRobots } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
+
+export const metadata = createPageMetadata({
+  title: "Page not found",
+  description: "The requested VIZIA Technologies page could not be found.",
+  path: "/404",
+  robots: noIndexNoFollowRobots,
+});
 
 export default function NotFound() {
   return (

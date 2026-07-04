@@ -1,7 +1,10 @@
 import type { Service } from "@/content/services";
 import { getServiceBySlug } from "@/content/services";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import marketing from "@/styles/marketing.module.css";
+import { absoluteUrl, buildBreadcrumbJsonLd } from "@/lib/seo";
+import { getCanonicalServiceSlug } from "@/lib/url-governance";
 
 type Props = {
   slug: string;
@@ -24,11 +27,31 @@ export default function ServiceDetailPage({ slug }: Props) {
   const service = getServiceBySlug(slug);
 
   if (!service) {
-    return <div className="container">Service not found</div>;
+    notFound();
   }
 
   const seoSummary = buildSeoSummary(service);
   const audience = buildAudience(service);
+  const canonicalSlug = getCanonicalServiceSlug(service.slug);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: `VIZIA Technologies - ${service.name}`,
+    url: absoluteUrl(`/services/${canonicalSlug}`),
+    serviceType: service.name,
+    description: service.summary,
+    areaServed: "Global",
+    provider: {
+      "@type": "Organization",
+      name: "VIZIA Technologies",
+      url: absoluteUrl("/"),
+    },
+  };
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+    { name: service.name, path: `/services/${canonicalSlug}` },
+  ]);
 
   return (
     <section className="section">
@@ -121,6 +144,15 @@ export default function ServiceDetailPage({ slug }: Props) {
             </Link>
           </div>
         </div>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
       </div>
     </section>
   );
