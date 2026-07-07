@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Inter, Rajdhani } from "next/font/google";
 import "./globals.css";
 import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -10,6 +11,19 @@ import { buildOrganizationJsonLd, buildSchemaGraph, buildWebsiteJsonLd, createRo
 
 export const metadata: Metadata = createRootMetadata();
 
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
+
+const rajdhani = Rajdhani({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  display: "swap",
+  variable: "--font-rajdhani",
+});
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -17,7 +31,7 @@ export default async function RootLayout({
 }>) {
   const siteContent = await loadSiteContent();
   return (
-    <html lang={siteConfig.language}>
+    <html lang={siteConfig.language} className={`${inter.variable} ${rajdhani.variable}`}>
       <body>
         <a className="skipLink" href="#main-content">
           Skip to content

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import styles from "./SiteHeader.module.css";
@@ -46,7 +47,15 @@ export function SiteHeader({ nav = DEFAULT_NAV }: { nav?: NavSection }) {
       <div className={`container ${styles.inner}`}>
         {/* ── Brand ── */}
         <Link className={styles.brand} href="/">
-          <img src="/vizia-logo.png" alt="VIZIA Technologies" className={styles.logoImg} />
+          <Image
+            src="/vizia-logo.png"
+            alt="VIZIA Technologies"
+            className={styles.logoImg}
+            width={240}
+            height={60}
+            priority
+            sizes="240px"
+          />
           <span className={styles.brandLabel}>
             <span className={styles.brandName}><span className={styles.brandV}>V</span>IZIA</span>
             <span className={styles.brandSub}>Technologies</span>

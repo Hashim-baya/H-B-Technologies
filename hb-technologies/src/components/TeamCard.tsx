@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { useState, useCallback } from 'react';
 import styles from './teamCard.module.css';
 
@@ -40,7 +41,7 @@ export default function TeamCard({ member }: Props) {
         <div className={styles.front}>
           <div className={styles.imgWrap}>
             {member.photo
-              ? <img src={member.photo} alt={member.name} className={styles.img} />
+              ? <Image src={member.photo} alt={member.name} className={styles.img} width={1200} height={900} sizes="(max-width: 768px) 100vw, 33vw" unoptimized />
               : <div className={styles.initial}>{member.name.charAt(0)}</div>}
           </div>
           <div className={styles.nameBar}>

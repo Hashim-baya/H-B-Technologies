@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import styles from "./SiteFooter.module.css";
 import { WhatsAppLink } from "./WhatsAppLink";
 
@@ -38,7 +39,14 @@ export function SiteFooter() {
         {/* ── Brand column ── */}
         <div className={styles.brandCol}>
           <Link href="/" className={styles.brand}>
-            <img src="/vizia-logo.png" alt="VIZIA Technologies" className={styles.logoImg} />
+            <Image
+              src="/vizia-logo.png"
+              alt="VIZIA Technologies"
+              className={styles.logoImg}
+              width={320}
+              height={80}
+              sizes="(max-width: 879px) 240px, 320px"
+            />
             <span className={styles.brandLabel}>
               <span className={styles.brandName}><span className={styles.brandV}>V</span>IZIA</span>
               <span className={styles.brandTag}>Technologies</span>

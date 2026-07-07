@@ -64,6 +64,16 @@ export default function HeroSection({ config }: Props) {
 
   const slide = slides[active];
   if (!slide) return null;
+  const heroPoster =
+    slide.poster ??
+    (slide.type === "video"
+      ? `/og?${new URLSearchParams({
+          title: slide.heading,
+          description: slide.subheading,
+          path: "/",
+          label: "VIZIA Technologies",
+        }).toString()}`
+      : undefined);
 
   const overlayStyle = {
     "--overlay-opacity": String(slide.overlayOpacity ?? 0.80),
@@ -92,7 +102,8 @@ export default function HeroSection({ config }: Props) {
             muted
             loop
             playsInline
-            poster={slide.poster}
+            preload="metadata"
+            poster={heroPoster}
             key={slide.id}
           >
             <source src={slide.mediaUrl} />

@@ -1,7 +1,5 @@
 /* ─── VIZIA Technologies – Global Design System ─────────────────────────── */
 
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 :root {
   /* 8-px spacing scale */
   --space-0: 0px;
@@ -51,8 +49,8 @@
   --color-accent: #FF6B6B;
 
   /* Typography */
-  --font-heading: 'Rajdhani', 'Inter', system-ui, sans-serif;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-rajdhani), var(--font-inter), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
   --line: 1.65;
 
   /* Shadows */
@@ -280,6 +278,8 @@ ul { padding-left: 20px; }
 .section {
   padding: var(--space-12) 0;
   position: relative;
+  content-visibility: auto;
+  contain-intrinsic-size: 900px;
 }
 
 /* ─── Cards ──────────────────────────────────────────────────────────────── */
