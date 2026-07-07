@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { ConsultationForm } from "@/components/ConsultationForm";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { WHATSAPP_DEFAULT_MESSAGE } from "@/lib/whatsapp";
 import { loadSiteContent } from "@/lib/content";
 import { buildContactPageJsonLd, buildSchemaGraph, createPageMetadata } from "@/lib/seo";
@@ -41,6 +42,7 @@ export default async function ContactPage() {
     <>
       <section className="section">
         <div className="container">
+          <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
           <h1>Contact VIZIA Technologies</h1>
           <p className={`muted ${marketing.lead}`}>
             Reach out to discuss your project requirements. We respond within
@@ -65,11 +67,8 @@ export default async function ContactPage() {
                 <li>We deliver a scoped plan and delivery roadmap</li>
               </ol>
               <p className={`muted ${marketing.mt2}`}>
-                Prefer a scheduled call? Use the consultation page.
+                Prefer a scheduled call? <Link href="/book-consultation">Book a consultation</Link> or explore our <Link href="/services">service offerings</Link>.
               </p>
-              <Link className="btn" href="/book-consultation">
-                Book consultation
-              </Link>
             </div>
           </div>
         </div>

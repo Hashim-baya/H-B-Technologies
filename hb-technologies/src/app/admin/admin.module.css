@@ -76,6 +76,23 @@
   box-shadow: 0 0 0 4px rgba(200,16,46,.12);
 }
 
+.loginInput:focus-visible,
+.loginBtn:focus-visible,
+.saveBtn:focus-visible,
+.previewBtn:focus-visible,
+.adminNavBrand:focus-visible,
+.backBtn:focus-visible,
+.addSlideBtn:focus-visible,
+.removeSlideBtn:focus-visible,
+.inlineAddBtn:focus-visible,
+.inlineRemoveBtn:focus-visible,
+.sectionAddBtn:focus-visible,
+.sectionRemoveBtn:focus-visible,
+.tabBtn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
 .loginBtn {
   width: 100%;
   padding: 13px;

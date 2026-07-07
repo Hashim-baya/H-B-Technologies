@@ -72,7 +72,7 @@ export default async function Home() {
                   <div className={styles.deliverIcon}>{card.icon}</div>
                   <h3 className={styles.cardTitle}>{card.title}</h3>
                   <p className={`muted ${styles.cardDesc}`}>{card.desc}</p>
-                  <span className={styles.cardArrow}>Learn more →</span>
+                  <span className={styles.cardArrow}>Explore {card.title} →</span>
                 </Link>
               </AnimateIn>
             ))}
@@ -210,8 +210,8 @@ export default async function Home() {
               <h2 className={styles.ctaHeadingWhite}>{c.cta.heading}</h2>
               <p className={styles.ctaCopyWhite}>{c.cta.copy}</p>
               <div className={styles.ctaActions}>
-                <Link className={`btn ${styles.ctaBtnLight}`} href="/book-consultation">Book Consultation</Link>
-                <Link className={`btn ${styles.ctaBtnOutline}`} href="/services">View All Services</Link>
+                <Link className={`btn ${styles.ctaBtnLight}`} href="/book-consultation">Book a consultation</Link>
+                <Link className={`btn ${styles.ctaBtnOutline}`} href="/services">Explore all services</Link>
               </div>
             </div>
           </AnimateIn>

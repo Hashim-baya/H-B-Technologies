@@ -1,5 +1,6 @@
 import { loadSiteContent, type AboutCard } from "@/lib/content";
 import { buildAboutPageJsonLd, buildSchemaGraph, createPageMetadata } from "@/lib/seo";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import marketing from "@/styles/marketing.module.css";
 
 export const metadata = createPageMetadata({
@@ -39,6 +40,7 @@ export default async function AboutPage() {
   return (
     <section className="section">
       <div className="container">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About" }]} />
         <h1>{about.heading}</h1>
         <p className={`muted ${marketing.lead}`}>{about.lead}</p>
 

@@ -49,8 +49,11 @@ You should see JSON like `{ ok: true, status: "healthy", ... }`.
 
 ### 2.1) Set environment variables (frontend)
 In the Render service → **Environment**:
-- `NEXT_PUBLIC_SITE_URL=https://<your-frontend-domain>`
+- `NEXT_PUBLIC_SITE_URL=https://vizia-technologies.vercel.app`
 - `API_URL=https://<your-api-domain>`
+
+Use the generated Render/Vercel frontend URL until a custom domain is connected.
+Do not point `NEXT_PUBLIC_SITE_URL` at a domain you do not own yet; canonical URLs, Open Graph URLs, Twitter image URLs, sitemap hosts, and structured data URLs all depend on it.
 
 Important:
 - `.env.example` files are **not** used by Render automatically.

@@ -5,6 +5,7 @@ import { blogPosts as staticBlogPosts } from "@/content/blog";
 import { getBlogPosts } from "@/lib/api";
 import { fetchDevToByTag } from '@/lib/external';
 import { services } from '@/content/services';
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { buildItemListJsonLd, buildSchemaGraph, buildWebPageJsonLd, createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
@@ -136,6 +137,7 @@ export default async function BlogIndexPage() {
   return (
     <section className="section">
       <div className="container">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Blog" }]} />
         <h1>Blog</h1>
         <p className={`muted ${marketing.lead}`}>
           Security, performance, and delivery practices — written for teams that
@@ -182,6 +184,10 @@ export default async function BlogIndexPage() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
         />
+
+        <p className={`muted ${marketing.mt3}`}>
+          Need implementation support? <Link href="/services/web-development">Explore web development services</Link> or <Link href="/contact">contact our engineering team</Link>.
+        </p>
       </div>
     </section>
   );

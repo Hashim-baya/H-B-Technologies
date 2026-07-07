@@ -12,6 +12,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   trailingSlash: false,
+  skipProxyUrlNormalize: true,
+  skipTrailingSlashRedirect: true,
   outputFileTracingRoot: process.cwd(),
   async headers() {
     return [

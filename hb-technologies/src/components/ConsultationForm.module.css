@@ -40,6 +40,13 @@
   color: var(--red-light);
 }
 
+.consentCheckbox:focus-visible,
+.consentLabel:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 .spinner {
   display: inline-block;
   width: 14px;

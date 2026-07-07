@@ -22,9 +22,40 @@ type DevToApiArticle = {
   cover_image?: string | null;
   social_image?: string | null;
   readable_publish_date?: string;
-  tag_list?: string[];
+  tag_list?: string[] | string;
+  tags?: string[] | string;
   user?: { name?: string };
 };
+
+function normalizeTagList(value: DevToApiArticle["tag_list"] | DevToApiArticle["tags"]) {
+  if (Array.isArray(value)) {
+    return value.map((tag) => String(tag).trim()).filter(Boolean);
+  }
+
+  if (typeof value === "string") {
+    return value
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+function toExternalArticle(article: DevToApiArticle, fallbackId: string | number): ExternalArticle {
+  return {
+    id: article.id || article.url || article.title || fallbackId,
+    title: article.title || "Untitled article",
+    description:
+      article.description || article.excerpt || article.social_image_caption || "",
+    url: article.url || "",
+    published_at: article.published_at || article.created_at || undefined,
+    cover_image: article.cover_image || article.social_image || null,
+    readable_publish_date: article.readable_publish_date,
+    tag_list: normalizeTagList(article.tag_list ?? article.tags),
+    user: article.user || {},
+  };
+}
 
 export async function fetchDevToByTag(tag: string, per_page = 6): Promise<ExternalArticle[]> {
   if (!tag) return [];
@@ -35,21 +66,7 @@ export async function fetchDevToByTag(tag: string, per_page = 6): Promise<Extern
     if (!res.ok) return [];
     const json: unknown = await res.json();
     if (!Array.isArray(json)) return [];
-    return json.map((item): ExternalArticle => {
-      const article = item as DevToApiArticle;
-      return {
-        id: article.id || article.url || article.title || crypto.randomUUID(),
-        title: article.title || "Untitled article",
-        description:
-          article.description || article.excerpt || article.social_image_caption || "",
-        url: article.url || "",
-        published_at: article.published_at || article.created_at || undefined,
-        cover_image: article.cover_image || article.social_image || null,
-        readable_publish_date: article.readable_publish_date,
-        tag_list: article.tag_list || [],
-        user: article.user || {},
-      };
-    });
+    return json.map((item) => toExternalArticle(item as DevToApiArticle, crypto.randomUUID()));
   } catch {
     return [];
   }
@@ -67,19 +84,7 @@ export async function fetchDevToArticleById(id: string | number): Promise<Extern
     const json: unknown = await res.json();
     if (!json || typeof json !== "object") return null;
 
-    const article = json as DevToApiArticle;
-    return {
-      id: article.id || article.url || article.title || String(id),
-      title: article.title || "Untitled article",
-      description:
-        article.description || article.excerpt || article.social_image_caption || "",
-      url: article.url || "",
-      published_at: article.published_at || article.created_at || undefined,
-      cover_image: article.cover_image || article.social_image || null,
-      readable_publish_date: article.readable_publish_date,
-      tag_list: article.tag_list || [],
-      user: article.user || {},
-    };
+    return toExternalArticle(json as DevToApiArticle, String(id));
   } catch {
     return null;
   }

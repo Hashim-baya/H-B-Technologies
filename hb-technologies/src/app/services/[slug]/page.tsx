@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { services as staticServices } from "@/content/services";
 import { loadSiteContent } from "@/lib/content";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import marketing from "@/styles/marketing.module.css";
 import {
   absoluteUrl,
@@ -109,6 +110,7 @@ export default async function ServiceDetailPage({
   return (
     <section className="section">
       <div className="container">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Services", href: "/services" }, { label: service.title }]} />
         <h1>{service.title}</h1>
         <p className={`muted ${marketing.lead}`}>{service.short_description}</p>
 
@@ -187,7 +189,7 @@ export default async function ServiceDetailPage({
           </p>
           <div className={marketing.mt2}>
             <Link className="btn btnPrimary" href="/book-consultation">
-              Book consultation
+              Book a consultation
             </Link>
           </div>
         </div>

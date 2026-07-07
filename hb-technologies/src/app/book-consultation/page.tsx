@@ -1,4 +1,5 @@
 import { ConsultationForm } from "@/components/ConsultationForm";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { buildSchemaGraph, buildWebPageJsonLd, createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
@@ -29,6 +30,7 @@ export default function BookConsultationPage() {
   return (
     <section className="section">
       <div className="container">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Book consultation" }]} />
         <h1>Book a consultation</h1>
         <p className={`muted ${marketing.lead}`}>
           We’ll scope requirements, identify risks, and propose an architecture

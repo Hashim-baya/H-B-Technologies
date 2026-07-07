@@ -7,7 +7,8 @@ import {
 } from "@/lib/url-governance";
 
 export function proxy(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+  const requestUrl = new URL(req.url);
+  const { pathname } = requestUrl;
 
   if (isLegacyEncodedExternalBlogPath(pathname)) {
     return new NextResponse(
@@ -23,9 +24,9 @@ export function proxy(req: NextRequest) {
   }
 
   if (shouldCleanPathname(pathname)) {
-    const url = req.nextUrl.clone();
+    const url = new URL(requestUrl);
     url.pathname = getCleanPathname(pathname);
-    return NextResponse.redirect(url, 301);
+    return NextResponse.redirect(url.toString(), 301);
   }
 
   return NextResponse.next();

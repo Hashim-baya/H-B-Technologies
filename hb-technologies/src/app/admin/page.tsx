@@ -216,8 +216,8 @@ export default function AdminPage() {
           <div className={s.loginLogo}>
             <span className={s.logoV}>V</span>IZIA
           </div>
-          <h1 className={s.loginTitle} style={{ display: "none" }}>Visual Editor</h1>
-          <p className={s.loginSub} style={{ display: "none" }}>
+          <h1 className={s.loginTitle} id="admin-login-title">Visual Editor</h1>
+          <p className={s.loginSub} id="admin-login-desc">
             Sign in to edit your site content directly — no coding required.
           </p>
           <div className={s.loginField}>
@@ -231,6 +231,7 @@ export default function AdminPage() {
               className={s.loginInput}
               placeholder="Enter password"
               autoFocus
+              aria-describedby="admin-login-desc"
             />
           </div>
           <button

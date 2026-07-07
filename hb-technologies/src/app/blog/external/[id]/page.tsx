@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { fetchDevToArticleById } from "@/lib/external";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { absoluteUrl, buildArticleJsonLd, buildBreadcrumbJsonLd, buildSchemaGraph, buildWebPageJsonLd, createPageMetadata, noIndexFollowRobots, noIndexNoFollowRobots } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
@@ -90,6 +91,7 @@ export default async function ExternalBlogDetailPage({ params }: PageProps) {
   return (
     <section className="section">
       <div className="container">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Blog", href: "/blog" }, { label: article.title }]} />
         <div className={marketing.stack}>
           <p className="eyebrow">External article</p>
           <h1>{article.title}</h1>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { loadSiteContent } from "@/lib/content";
 import { buildItemListJsonLd, buildSchemaGraph, buildWebPageJsonLd, createPageMetadata } from "@/lib/seo";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import marketing from "@/styles/marketing.module.css";
 
 export const metadata = createPageMetadata({
@@ -44,6 +45,7 @@ export default async function ServicesPage() {
   return (
     <section className="section">
       <div className="container">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Services" }]} />
         <h1>{heading}</h1>
         <p className={`muted ${marketing.lead}`}>{lead}</p>
 
@@ -55,7 +57,7 @@ export default async function ServicesPage() {
                 <p className={`muted ${marketing.cardDesc}`}>{s.summary}</p>
                 <div className={marketing.mt2}>
                   <Link className="btn" href={`/services/${s.slug}`}>
-                    View details
+                    Explore {s.name}
                   </Link>
                 </div>
               </div>

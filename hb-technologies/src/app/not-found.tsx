@@ -3,9 +3,10 @@ import { createPageMetadata, noIndexNoFollowRobots } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
 export const metadata = createPageMetadata({
-  title: "Page not found",
-  description: "The requested VIZIA Technologies page could not be found.",
+  title: "Page Not Found",
+  description: "This VIZIA Technologies page was not found. Return home or explore our secure software and technology services.",
   path: "/404",
+  imageLabel: "Page not found",
   robots: noIndexNoFollowRobots,
 });
 

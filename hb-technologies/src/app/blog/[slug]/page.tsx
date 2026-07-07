@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { getPostBySlug } from "@/content/blog";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { absoluteUrl, buildArticleJsonLd, buildBreadcrumbJsonLd, buildSchemaGraph, buildWebPageJsonLd, createPageMetadata } from "@/lib/seo";
 import { getBlogPost } from "@/lib/api";
 import marketing from "@/styles/marketing.module.css";
@@ -169,6 +170,7 @@ export default async function BlogPostPage({
   return (
     <article className="section">
       <div className="container">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Blog", href: "/blog" }, { label: post.title }]} />
         <h1>{post.title}</h1>
         <p className="muted">
           {toDisplayDate(post.created_at)}
