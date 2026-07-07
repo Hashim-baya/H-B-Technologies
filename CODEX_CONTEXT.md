@@ -115,6 +115,19 @@ Accessibility implementation:
 - `next/font` replaced the remote Google Fonts `@import`, improving rendering and reducing blocking network requests.
 - `docs/accessibility-report.md` captures the WCAG 2.2 AA validation summary and remaining review notes.
 
+Internal linking architecture optimization:
+
+- A new `Breadcrumbs` component (`src/components/Breadcrumbs.tsx`) provides visible navigation breadcrumbs on all hierarchy pages with schema-ready structure.
+- Breadcrumbs are now rendered on `/services`, `/services/[slug]`, `/blog`, `/blog/[slug]`, `/blog/external/[id]`, `/about`, `/contact`, and `/book-consultation`.
+- Anchor text has been made destination-specific: "Explore [Service Name]" replaces generic "Learn more", improving both UX and topical relevance.
+- Contextual internal links were added to reduce isolated pages:
+  - Blog index now links to `/services/web-development` and `/contact` for service discovery.
+  - Contact page now links to both `/book-consultation` (inline) and `/services` (inline) to improve navigation flow.
+- Fixed footer service link: `/services/smart-cctv` was corrected to `/services/smart-cctv-installation` to match the actual service slug.
+- All pages are now reachable within 2–3 hops from the homepage; no orphan or dead-end pages remain.
+- Removed `NEXT_TEST_WASM=1` from `package.json` build scripts to fix Windows/PowerShell build failures.
+- `docs/internal-linking-report.md` provides a comprehensive audit of site hierarchy, crawl paths, page authority distribution, and link inventory.
+
 ## Implemented Application Features
 
 Frontend pages:
