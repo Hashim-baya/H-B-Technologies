@@ -139,9 +139,20 @@ XML sitemap generation and robots.txt configuration:
 - Blog post pages are auto-generated from Supabase with lastmod derived from post creation date; fallback to static blog data if API unavailable.
 - Production domain (https://www.vizia.co.ke) is used throughout via `getSiteUrl()` with proper fallback chain.
 - `src/app/robots.ts` now includes comprehensive documentation and references `/sitemap.xml` with proper host consolidation (www-version).
+- Enhanced robots.txt configuration (`src/app/robots.ts`) provides production-grade crawler control:
+  - Explicit allow rules for all public content (/, /services/, /blog/, /about, /contact, /book-consultation)
+  - Blocks admin interface (/admin/*) and API routes (/api/*) to prevent private content exposure and crawl errors
+  - Blocks internal utilities (/og, /*.json, /*.xml) to protect non-content endpoints
+  - Sets respectful crawl-delay: 1 second to prevent server overload
+  - Blocks aggressive third-party crawlers (AhrefsBot, SemrushBot, DotBot) to preserve crawl budget
+  - Blocks AI training bots (ChatGPT-User, GPTBot, Claude-Web, Bard-Web) to protect content from unauthorized training
+  - References comprehensive XML sitemap (/sitemap.xml) for explicit page discovery
+  - Consolidates domain authority via Host header (https://www.vizia.co.ke www-version)
 - Excluded pages by design: `/admin` (noindex), `/api/*` (not content), `/blog/external/*` (noindex, external canonical), `/og` (image generation), `/not-found` (error page).
 - Sitemap builds and serves successfully (200 status code confirmed in dev server).
 - `docs/sitemap-report.md` provides comprehensive protocol compliance checklist, metadata documentation, page inventory breakdown, and SEO impact analysis.
+- `docs/robots-txt-report.md` documents every robots.txt directive, rationale, RFC 9309 compliance, and Google Search Central best practices.
+- `docs/robots-txt-crawlability-test.md` verifies all crawlability tests pass (public pages allowed, admin/API blocked, bot blocking verified, no false positives).
 
 ## Implemented Application Features
 
