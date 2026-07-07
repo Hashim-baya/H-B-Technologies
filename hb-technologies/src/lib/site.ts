@@ -40,6 +40,7 @@ export const siteConfig = {
   },
 } as const;
 
+const PRODUCTION_SITE_URL = "https://www.vizia.co.ke";
 const LOCAL_SITE_URL = "http://localhost:3000";
 
 function fromVercelDomain(value?: string) {
@@ -48,17 +49,26 @@ function fromVercelDomain(value?: string) {
 }
 
 function resolveSiteUrlInput() {
-  return (
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    process.env.RENDER_EXTERNAL_URL ||
-    fromVercelDomain(process.env.VERCEL_PROJECT_PRODUCTION_URL) ||
-    fromVercelDomain(process.env.VERCEL_URL) ||
-    LOCAL_SITE_URL
-  );
-}
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.RENDER_EXTERNAL_URL,
+    fromVercelDomain(process.env.VERCEL_PROJECT_PRODUCTION_URL),
+    fromVercelDomain(process.env.VERCEL_URL),
+    PRODUCTION_SITE_URL,
+    LOCAL_SITE_URL,
+  ];
 
-function isLocalHostname(hostname: string) {
-  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+
+    try {
+      return new URL(candidate).toString();
+    } catch {
+      continue;
+    }
+  }
+
+  return LOCAL_SITE_URL;
 }
 
 export function getSiteUrl() {
@@ -66,12 +76,6 @@ export function getSiteUrl() {
   const url = new URL(raw);
   url.hash = "";
   url.search = "";
-
-  if (process.env.NODE_ENV === "production" && isLocalHostname(url.hostname)) {
-    throw new Error(
-      "NEXT_PUBLIC_SITE_URL must be set to the production origin before building or running the SEO frontend."
-    );
-  }
 
   return url;
 }

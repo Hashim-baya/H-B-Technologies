@@ -14,12 +14,14 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const article = await fetchDevToArticleById(id);
+  const localPath = `/blog/external/${id}`;
 
   if (!article) {
     return createPageMetadata({
-      title: "Blog article unavailable",
+      title: "External Article Unavailable",
       description: "This external article is no longer available.",
-      path: `/blog/external/${id}`,
+      path: localPath,
+      imageLabel: "External article",
       robots: noIndexNoFollowRobots,
     });
   }
@@ -27,10 +29,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return createPageMetadata({
     title: article.title,
     description: article.description || "External article related to VIZIA Technologies service areas.",
-    path: `/blog/external/${id}`,
-    canonical: article.url || `/blog/external/${id}`,
+    path: localPath,
+    canonical: localPath,
     type: "article",
-    images: article.cover_image ? [article.cover_image] : undefined,
+    keywords: [
+      ...(article.tag_list ?? []),
+      "external engineering article",
+      "VIZIA Technologies",
+    ],
+    imageLabel: "External article",
+    images: article.cover_image
+      ? [
+          {
+            url: article.cover_image,
+            alt: `${article.title} social preview image`,
+          },
+        ]
+      : undefined,
     robots: noIndexFollowRobots,
   });
 }
