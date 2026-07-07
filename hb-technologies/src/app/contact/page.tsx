@@ -4,17 +4,33 @@ import { ConsultationForm } from "@/components/ConsultationForm";
 import { WhatsAppLink } from "@/components/WhatsAppLink";
 import { WHATSAPP_DEFAULT_MESSAGE } from "@/lib/whatsapp";
 import { loadSiteContent } from "@/lib/content";
-import { createPageMetadata } from "@/lib/seo";
+import { buildContactPageJsonLd, buildSchemaGraph, createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
 export const revalidate = 0;
 
 export const metadata = createPageMetadata({
-  title: "Contact VIZIA Technologies | Consultation & Support",
+  title: "Contact Our Engineering Team",
   description:
-    "Get in touch with VIZIA Technologies for AI, cybersecurity, web development, and enterprise IT solutions. Email us or book a consultation.",
+    "Contact VIZIA Technologies to discuss secure software, AI automation, cyber security, IoT, or enterprise infrastructure projects.",
   path: "/contact",
+  imageLabel: "Contact engineering",
+  keywords: [
+    "contact VIZIA Technologies",
+    "software consultation",
+    "cyber security consultation",
+    "AI project consultation",
+  ],
 });
+
+const contactSchema = buildSchemaGraph([
+  buildContactPageJsonLd({
+    name: "Contact Our Engineering Team",
+    description:
+      "Contact VIZIA Technologies to discuss secure software, AI automation, cyber security, IoT, or enterprise infrastructure projects.",
+    path: "/contact",
+  }),
+]);
 
 export default async function ContactPage() {
   const c = await loadSiteContent();
@@ -122,6 +138,11 @@ export default async function ContactPage() {
           </div>
         </div>
       </section>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactSchema) }}
+      />
     </>
   );
 }

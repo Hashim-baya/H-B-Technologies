@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import ScrollProgress from "@/components/ScrollProgress";
 import { siteConfig } from "@/lib/site";
 import { loadSiteContent } from "@/lib/content";
-import { buildOrganizationJsonLd, createRootMetadata } from "@/lib/seo";
+import { buildOrganizationJsonLd, buildSchemaGraph, buildWebsiteJsonLd, createRootMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createRootMetadata();
 
@@ -33,7 +33,7 @@ export default async function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(buildOrganizationJsonLd()),
+            __html: JSON.stringify(buildSchemaGraph([buildOrganizationJsonLd(), buildWebsiteJsonLd()])),
           }}
         />
       </body>

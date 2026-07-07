@@ -1,13 +1,29 @@
 import { ConsultationForm } from "@/components/ConsultationForm";
-import { createPageMetadata } from "@/lib/seo";
+import { buildSchemaGraph, buildWebPageJsonLd, createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
 export const metadata = createPageMetadata({
-  title: "Book Consultation",
+  title: "Book a Technology Consultation",
   description:
-    "Book a consultation with VIZIA Technologies for secure-by-design engineering and delivery planning.",
+    "Book a consultation with VIZIA Technologies to scope secure software, AI automation, cyber security, cloud, or IoT delivery.",
   path: "/book-consultation",
+  imageLabel: "Book consultation",
+  keywords: [
+    "book technology consultation",
+    "software project consultation",
+    "AI consultation",
+    "cyber security consultation",
+  ],
 });
+
+const bookConsultationSchema = buildSchemaGraph([
+  buildWebPageJsonLd({
+    name: "Book a Technology Consultation",
+    description:
+      "Book a consultation with VIZIA Technologies to scope secure software, AI automation, cyber security, cloud, or IoT delivery.",
+    path: "/book-consultation",
+  }),
+]);
 
 export default function BookConsultationPage() {
   return (
@@ -38,6 +54,11 @@ export default function BookConsultationPage() {
             </p>
           </div>
         </div>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(bookConsultationSchema) }}
+        />
       </div>
     </section>
   );

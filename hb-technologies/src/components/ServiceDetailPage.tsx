@@ -3,7 +3,7 @@ import { getServiceBySlug } from "@/content/services";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import marketing from "@/styles/marketing.module.css";
-import { absoluteUrl, buildBreadcrumbJsonLd } from "@/lib/seo";
+import { absoluteUrl, buildBreadcrumbJsonLd, buildSchemaGraph, buildServiceJsonLd, buildWebPageJsonLd } from "@/lib/seo";
 import { getCanonicalServiceSlug } from "@/lib/url-governance";
 
 type Props = {
@@ -33,24 +33,26 @@ export default function ServiceDetailPage({ slug }: Props) {
   const seoSummary = buildSeoSummary(service);
   const audience = buildAudience(service);
   const canonicalSlug = getCanonicalServiceSlug(service.slug);
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    name: `VIZIA Technologies - ${service.name}`,
-    url: absoluteUrl(`/services/${canonicalSlug}`),
-    serviceType: service.name,
-    description: service.summary,
-    areaServed: "Global",
-    provider: {
-      "@type": "Organization",
-      name: "VIZIA Technologies",
-      url: absoluteUrl("/"),
-    },
-  };
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Services", path: "/services" },
     { name: service.name, path: `/services/${canonicalSlug}` },
+  ]);
+  const serviceUrl = absoluteUrl(`/services/${canonicalSlug}`);
+  const jsonLd = buildSchemaGraph([
+    buildWebPageJsonLd({
+      name: `${service.name} Services`,
+      description: service.summary,
+      path: `/services/${canonicalSlug}`,
+      mainEntityId: `${serviceUrl}#service`,
+    }),
+    buildServiceJsonLd({
+      slug: service.slug,
+      title: service.name,
+      description: service.summary,
+      keywords: service.keywords,
+    }),
+    breadcrumbJsonLd,
   ]);
 
   return (
@@ -148,10 +150,6 @@ export default function ServiceDetailPage({ slug }: Props) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
       </div>
     </section>

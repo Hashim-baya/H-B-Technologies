@@ -87,6 +87,22 @@ Already present:
 - Main pages generally have one visible `h1`.
 - Most content images have `alt` text where rendered.
 
+Implemented after the audit:
+
+- `src/lib/site.ts` now falls back to `https://www.vizia.co.ke` when environment-based production URL variables are missing, so canonical URLs, sitemap URLs, robots sitemap/host values, and organization JSON-LD do not point at localhost in production.
+- `src/app/blog/external/[id]/page.tsx` now generates metadata with the local `/blog/external/[id]` canonical, a unique title and description, `noindex, follow`, Open Graph image data, Twitter-ready image data, and keywords for external article pages.
+- Structured data now uses reusable builders in `src/lib/seo.ts` and a single JSON-LD graph per page.
+- The root layout now emits `Organization` and `WebSite` schema.
+- The homepage emits `WebPage` schema.
+- The about page emits `AboutPage` schema.
+- The contact page emits `ContactPage` schema.
+- The consultation booking page emits `WebPage` schema.
+- The services index emits `WebPage` + `ItemList` schema.
+- Service detail pages emit `WebPage` + `Service` + `BreadcrumbList` schema.
+- Blog index pages emit `WebPage` + `ItemList` schema.
+- Blog detail pages emit `WebPage` + `Article` + `BreadcrumbList` schema.
+- SearchAction, FAQ, Product, Review, and Person schemas were intentionally not added because the current site does not expose a public search page, FAQ content, product detail pages, review data, or person profile pages.
+
 ## Implemented Application Features
 
 Frontend pages:

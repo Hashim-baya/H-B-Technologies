@@ -5,16 +5,17 @@ import TeamCard from "@/components/TeamCard";
 import styles from "./page.module.css";
 import type { SiteContent } from "@/lib/content";
 import { loadSiteContent } from "@/lib/content";
-import { createPageMetadata } from "@/lib/seo";
+import { buildSchemaGraph, buildWebPageJsonLd, createPageMetadata } from "@/lib/seo";
 
 export const revalidate = 0;
 
 export const metadata = createPageMetadata({
-  title: "VIZIA Technologies",
+  title: "VIZIA Technologies | Secure Software, AI & Cybersecurity",
   description:
-    "VIZIA Technologies is a software engineering company delivering security-first product development, AI-powered automation, and scalable enterprise systems.",
+    "Build secure web platforms, AI automation, cyber security, IoT, and enterprise systems with a production-focused engineering team.",
   path: "/",
   absoluteTitle: true,
+  imageLabel: "Secure engineering partner",
   keywords: [
     "software engineering company",
     "AI development firm",
@@ -23,6 +24,15 @@ export const metadata = createPageMetadata({
     "enterprise software development",
   ],
 });
+
+const homeSchema = buildSchemaGraph([
+  buildWebPageJsonLd({
+    name: "VIZIA Technologies | Secure Software, AI & Cybersecurity",
+    description:
+      "Build secure web platforms, AI automation, cyber security, IoT, and enterprise systems with a production-focused engineering team.",
+    path: "/",
+  }),
+]);
 
 export default async function Home() {
   const c: SiteContent = await loadSiteContent();
@@ -207,6 +217,11 @@ export default async function Home() {
           </AnimateIn>
         </div>
       </section>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeSchema) }}
+      />
     </div>
   );
 }

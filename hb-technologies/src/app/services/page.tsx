@@ -1,13 +1,21 @@
 import Link from "next/link";
 import { loadSiteContent } from "@/lib/content";
-import { buildItemListJsonLd, createPageMetadata } from "@/lib/seo";
+import { buildItemListJsonLd, buildSchemaGraph, buildWebPageJsonLd, createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
 export const metadata = createPageMetadata({
-  title: "Services",
+  title: "Software, AI & Cybersecurity Services",
   description:
-    "Explore VIZIA Technologies services: web and mobile development, cyber security, data & AI, network engineering, automation, IoT, and Smart CCTV.",
+    "Explore secure web, mobile, AI, data, cloud, cyber security, IoT, automation, and network engineering services from VIZIA Technologies.",
   path: "/services",
+  imageLabel: "Technology services",
+  keywords: [
+    "software development services",
+    "AI development services",
+    "cyber security services",
+    "IoT solutions",
+    "network engineering services",
+  ],
 });
 
 export const revalidate = 0;
@@ -23,6 +31,15 @@ export default async function ServicesPage() {
       path: `/services/${service.slug}`,
     }))
   );
+  const servicesJsonLd = buildSchemaGraph([
+    buildWebPageJsonLd({
+      name: "Software, AI & Cybersecurity Services",
+      description:
+        "Explore secure web, mobile, AI, data, cloud, cyber security, IoT, automation, and network engineering services from VIZIA Technologies.",
+      path: "/services",
+    }),
+    itemListJsonLd,
+  ]);
 
   return (
     <section className="section">
@@ -48,7 +65,7 @@ export default async function ServicesPage() {
 
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesJsonLd) }}
         />
       </div>
     </section>

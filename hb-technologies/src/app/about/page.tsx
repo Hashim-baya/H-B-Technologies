@@ -1,15 +1,31 @@
 import { loadSiteContent, type AboutCard } from "@/lib/content";
-import { createPageMetadata } from "@/lib/seo";
+import { buildAboutPageJsonLd, buildSchemaGraph, createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
 export const metadata = createPageMetadata({
-  title: "About",
+  title: "About Our Engineering Team",
   description:
-    "VIZIA Technologies is a software engineering company delivering security-first product development, AI-powered innovation, and compliance-driven engineering standards.",
+    "Meet the security-first engineering team building scalable software, AI systems, cyber security solutions, and enterprise infrastructure.",
   path: "/about",
+  imageLabel: "About VIZIA",
+  keywords: [
+    "about VIZIA Technologies",
+    "software engineering company",
+    "security-first engineering team",
+    "AI development company",
+  ],
 });
 
 export const revalidate = 0;
+
+const aboutSchema = buildSchemaGraph([
+  buildAboutPageJsonLd({
+    name: "About Our Engineering Team",
+    description:
+      "Meet the security-first engineering team building scalable software, AI systems, cyber security solutions, and enterprise infrastructure.",
+    path: "/about",
+  }),
+]);
 
 export default async function AboutPage() {
   const c = await loadSiteContent();
@@ -32,6 +48,11 @@ export default async function AboutPage() {
             {b && <AboutCard card={b} />}
           </div>
         ))}
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }}
+        />
       </div>
     </section>
   );

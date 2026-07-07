@@ -5,14 +5,22 @@ import { blogPosts as staticBlogPosts } from "@/content/blog";
 import { getBlogPosts } from "@/lib/api";
 import { fetchDevToByTag } from '@/lib/external';
 import { services } from '@/content/services';
-import { buildBlogJsonLd, buildItemListJsonLd, createPageMetadata } from "@/lib/seo";
+import { buildItemListJsonLd, buildSchemaGraph, buildWebPageJsonLd, createPageMetadata } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
 export const metadata = createPageMetadata({
-  title: "Blog",
+  title: "Engineering Blog",
   description:
-    "Practical notes on secure engineering, performance, Supabase RLS, and AI delivery.",
+    "Read practical engineering insights on security, performance, AI delivery, Supabase RLS, APIs, DevOps, and scalable software systems.",
   path: "/blog",
+  imageLabel: "Engineering insights",
+  keywords: [
+    "software engineering blog",
+    "cyber security blog",
+    "Next.js performance",
+    "AI engineering",
+    "DevOps guides",
+  ],
 });
 
 export const revalidate = 60;
@@ -111,11 +119,19 @@ export default async function BlogIndexPage() {
     description: post.excerpt,
     path: `/blog/${post.slug}`,
   }));
-  const blogJsonLd = buildBlogJsonLd(internalPostEntries);
   const itemListJsonLd = buildItemListJsonLd(
     "VIZIA Technologies Blog Articles",
     internalPostEntries
   );
+  const blogJsonLd = buildSchemaGraph([
+    buildWebPageJsonLd({
+      name: "Engineering Blog",
+      description:
+        "Read practical engineering insights on security, performance, AI delivery, Supabase RLS, APIs, DevOps, and scalable software systems.",
+      path: "/blog",
+    }),
+    itemListJsonLd,
+  ]);
 
   return (
     <section className="section">
@@ -165,10 +181,6 @@ export default async function BlogIndexPage() {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
         />
       </div>
     </section>

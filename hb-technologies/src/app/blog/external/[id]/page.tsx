@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { fetchDevToArticleById } from "@/lib/external";
-import { createPageMetadata, noIndexFollowRobots, noIndexNoFollowRobots } from "@/lib/seo";
+import { absoluteUrl, buildArticleJsonLd, buildBreadcrumbJsonLd, buildSchemaGraph, buildWebPageJsonLd, createPageMetadata, noIndexFollowRobots, noIndexNoFollowRobots } from "@/lib/seo";
 import marketing from "@/styles/marketing.module.css";
 
 type PageProps = {
@@ -53,8 +53,39 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ExternalBlogDetailPage({ params }: PageProps) {
   const { id } = await params;
   const article = await fetchDevToArticleById(id);
+  const localPath = `/blog/external/${id}`;
 
   if (!article) notFound();
+
+  const articleUrl = article.url || localPath;
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: article.title, path: localPath },
+  ]);
+  const jsonLd = buildSchemaGraph([
+    buildWebPageJsonLd({
+      name: article.title,
+      description: article.description || "External article related to VIZIA Technologies service areas.",
+      path: localPath,
+      mainEntityId: `${absoluteUrl(localPath)}#article`,
+    }),
+    buildArticleJsonLd({
+      name: article.title,
+      description: article.description || "External article related to VIZIA Technologies service areas.",
+      path: localPath,
+      author: article.user?.name || "VIZIA Technologies",
+      datePublished: article.published_at,
+      keywords: article.tag_list,
+      image: article.cover_image
+        ? {
+            url: article.cover_image,
+            alt: `${article.title} social preview image`,
+          }
+        : undefined,
+    }),
+    breadcrumbJsonLd,
+  ]);
 
   return (
     <section className="section">
@@ -91,11 +122,16 @@ export default async function ExternalBlogDetailPage({ params }: PageProps) {
             <p className="muted">Tags: {article.tag_list.join(", ")}</p>
           ) : null}
           <div className={marketing.mt4}>
-            <Link className="btn btnPrimary" href={article.url || "/blog"} target="_blank" rel="noopener noreferrer">
+            <Link className="btn btnPrimary" href={articleUrl} target="_blank" rel="noopener noreferrer">
               Read original article
             </Link>
           </div>
         </div>
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </div>
     </section>
   );

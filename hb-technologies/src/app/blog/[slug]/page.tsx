@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { getPostBySlug } from "@/content/blog";
-import { absoluteUrl, buildBreadcrumbJsonLd, createPageMetadata } from "@/lib/seo";
+import { absoluteUrl, buildArticleJsonLd, buildBreadcrumbJsonLd, buildSchemaGraph, buildWebPageJsonLd, createPageMetadata } from "@/lib/seo";
 import { getBlogPost } from "@/lib/api";
 import marketing from "@/styles/marketing.module.css";
 
@@ -89,7 +89,21 @@ export async function generateMetadata({
     description: post.excerpt,
     path: `/blog/${post.slug}`,
     type: "article",
-    images: post.featured_image ? [post.featured_image] : undefined,
+    keywords: [
+      ...post.tags,
+      "VIZIA Technologies",
+      "secure software engineering",
+      "technology delivery",
+    ],
+    imageLabel: "Engineering article",
+    images: post.featured_image
+      ? [
+          {
+            url: post.featured_image,
+            alt: `${post.title} social preview image`,
+          },
+        ]
+      : undefined,
   });
 }
 
@@ -123,24 +137,33 @@ export default async function BlogPostPage({
   const paragraphs = splitParagraphs(post.content);
 
   const url = absoluteUrl(`/blog/${post.slug}`);
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    headline: post.title,
-    description: post.excerpt,
-    datePublished: post.created_at,
-    url,
-    image: post.featured_image || undefined,
-    author: {
-      "@type": "Organization",
-      name: post.author || "VIZIA Technologies",
-    },
-    keywords: post.tags.length ? post.tags.join(", ") : undefined,
-  };
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "Home", path: "/" },
     { name: "Blog", path: "/blog" },
     { name: post.title, path: `/blog/${post.slug}` },
+  ]);
+  const jsonLd = buildSchemaGraph([
+    buildWebPageJsonLd({
+      name: post.title,
+      description: post.excerpt,
+      path: `/blog/${post.slug}`,
+      mainEntityId: `${url}#article`,
+    }),
+    buildArticleJsonLd({
+      name: post.title,
+      description: post.excerpt,
+      path: `/blog/${post.slug}`,
+      author: post.author || "VIZIA Technologies",
+      datePublished: post.created_at,
+      keywords: post.tags,
+      image: post.featured_image
+        ? {
+            url: post.featured_image,
+            alt: `${post.title} social preview image`,
+          }
+        : undefined,
+    }),
+    breadcrumbJsonLd,
   ]);
 
   return (
@@ -190,10 +213,6 @@ export default async function BlogPostPage({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
         />
       </div>
     </article>
