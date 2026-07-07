@@ -171,10 +171,10 @@ export function EditableImage({ src, alt = "", onChange, onTypeChange, className
         <div className={s.imgDialog}>
           {/* Tabs */}
           <div className={s.imgDialogTabs}>
-            <button className={`${s.imgDialogTab} ${tab === "upload" ? s.imgDialogTabActive : ""}`} onClick={() => setTab("upload")}>
+            <button type="button" className={`${s.imgDialogTab} ${tab === "upload" ? s.imgDialogTabActive : ""}`} onClick={() => setTab("upload")}>
               ↑ Upload file
             </button>
-            <button className={`${s.imgDialogTab} ${tab === "url" ? s.imgDialogTabActive : ""}`} onClick={() => { setTab("url"); setTimeout(() => urlRef.current?.focus(), 0); }}>
+            <button type="button" className={`${s.imgDialogTab} ${tab === "url" ? s.imgDialogTabActive : ""}`} onClick={() => { setTab("url"); setTimeout(() => urlRef.current?.focus(), 0); }}>
               🔗 Paste URL
             </button>
           </div>
@@ -221,8 +221,8 @@ export function EditableImage({ src, alt = "", onChange, onTypeChange, className
           )}
 
           <div className={s.imgDialogActions}>
-            <button className={s.applyBtn} onClick={apply} disabled={!preview || uploading}>{uploading ? "Uploading…" : "Apply"}</button>
-            <button className={s.cancelBtn} onClick={() => { setOpen(false); setSizeWarn(""); setFileLabel(""); }}>Cancel</button>
+            <button type="button" className={s.applyBtn} onClick={apply} disabled={!preview || uploading}>{uploading ? "Uploading…" : "Apply"}</button>
+            <button type="button" className={s.cancelBtn} onClick={() => { setOpen(false); setSizeWarn(""); setFileLabel(""); }}>Cancel</button>
           </div>
         </div>
       )}
@@ -259,11 +259,11 @@ export function EditableList({ items, onChange, placeholder = "Add item…", cla
             placeholder={placeholder}
             className={s.editableListText}
           />
-          <button className={s.removeItemBtn} onClick={() => remove(i)} title="Remove">×</button>
+          <button type="button" className={s.removeItemBtn} onClick={() => remove(i)} title="Remove">×</button>
         </li>
       ))}
       <li>
-        <button className={s.addItemBtn} onClick={add}>+ Add</button>
+        <button type="button" className={s.addItemBtn} onClick={add}>+ Add</button>
       </li>
     </ul>
   );
@@ -287,12 +287,12 @@ export function SectionShell({ label, children, className = "", onAdd, addLabel 
       <div className={s.sectionShellLabel}>
         {label}
         {onRemove && (
-          <button className={s.sectionRemoveBtn} onClick={onRemove} title="Remove">×</button>
+          <button type="button" className={s.sectionRemoveBtn} onClick={onRemove} title="Remove">×</button>
         )}
       </div>
       {children}
       {onAdd && (
-        <button className={s.sectionAddBtn} onClick={onAdd}>+ {addLabel}</button>
+        <button type="button" className={s.sectionAddBtn} onClick={onAdd}>+ {addLabel}</button>
       )}
     </div>
   );

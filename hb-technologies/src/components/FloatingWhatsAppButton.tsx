@@ -3,7 +3,7 @@ import { WhatsAppLink } from "./WhatsAppLink";
 
 export function FloatingWhatsAppButton() {
   return (
-    <div className={styles.floatingWrap} aria-hidden="false">
+    <div className={styles.floatingWrap}>
       <WhatsAppLink
         label="WhatsApp"
         ariaLabel="Chat with VIZIA Technologies on WhatsApp"

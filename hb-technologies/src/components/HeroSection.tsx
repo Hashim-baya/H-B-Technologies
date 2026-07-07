@@ -170,6 +170,7 @@ export default function HeroSection({ config }: Props) {
           {slides.map((s, i) => (
             <button
               key={s.id}
+              type="button"
               role="tab"
               aria-selected={i === active}
               aria-label={`Slide ${i + 1}`}
@@ -187,6 +188,7 @@ export default function HeroSection({ config }: Props) {
       {slides.length > 1 && (
         <>
           <button
+            type="button"
             className={`${styles.arrow} ${styles.arrowPrev}`}
             onClick={() => goTo((active - 1 + slides.length) % slides.length)}
             aria-label="Previous slide"
@@ -196,6 +198,7 @@ export default function HeroSection({ config }: Props) {
             </svg>
           </button>
           <button
+            type="button"
             className={`${styles.arrow} ${styles.arrowNext}`}
             onClick={() => goTo((active + 1) % slides.length)}
             aria-label="Next slide"

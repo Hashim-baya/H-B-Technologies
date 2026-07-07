@@ -86,6 +86,7 @@ Already present:
 - Site has a skip link to `#main-content`.
 - Main pages generally have one visible `h1`.
 - Most content images have `alt` text where rendered.
+- Accessibility improvements now include keyboard-accessible mobile navigation, announced form status messages, a keyboard-operable team card, visible focus states for shared controls, and a visible admin login heading.
 
 Implemented after the audit:
 
@@ -102,6 +103,17 @@ Implemented after the audit:
 - Blog index pages emit `WebPage` + `ItemList` schema.
 - Blog detail pages emit `WebPage` + `Article` + `BreadcrumbList` schema.
 - SearchAction, FAQ, Product, Review, and Person schemas were intentionally not added because the current site does not expose a public search page, FAQ content, product detail pages, review data, or person profile pages.
+
+Accessibility implementation:
+
+- Public pages now preserve a clear heading hierarchy with a visible skip link and landmark structure.
+- `src/components/ConsultationForm.tsx` was rebuilt to provide explicit labels, help text, `aria-describedby`, and live status/error announcements for screen readers.
+- `src/components/SiteHeader.tsx` now supports keyboard-friendly mobile navigation with explicit button semantics, escape-to-close behavior, and focus return.
+- `src/components/TeamCard.tsx` now supports keyboard activation and exposes pressed state for assistive technology.
+- `src/app/admin/page.tsx` exposes the login heading and password field to assistive tech instead of hiding them.
+- `src/components/FloatingWhatsAppButton.tsx` no longer uses a redundant `aria-hidden` wrapper.
+- `next/font` replaced the remote Google Fonts `@import`, improving rendering and reducing blocking network requests.
+- `docs/accessibility-report.md` captures the WCAG 2.2 AA validation summary and remaining review notes.
 
 ## Implemented Application Features
 

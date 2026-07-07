@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, type KeyboardEvent } from 'react';
 import styles from './teamCard.module.css';
 
 interface Props {
@@ -25,6 +25,13 @@ export default function TeamCard({ member }: Props) {
     }
   }, []);
 
+  const onKeyDown = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      setFlipped((value) => !value);
+    }
+  }, []);
+
   return (
     <div
       className={`${styles.outer} ${flipped ? styles.flipped : ''}`}
@@ -33,7 +40,9 @@ export default function TeamCard({ member }: Props) {
       onClick={toggle}
       role="button"
       tabIndex={0}
+      aria-pressed={flipped}
       aria-label={`${member.name} — ${member.role}`}
+      onKeyDown={onKeyDown}
     >
       <div className={styles.inner}>
 

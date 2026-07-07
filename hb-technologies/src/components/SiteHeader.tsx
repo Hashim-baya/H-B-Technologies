@@ -22,6 +22,8 @@ export function SiteHeader({ nav = DEFAULT_NAV }: { nav?: NavSection }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -37,6 +39,26 @@ export function SiteHeader({ nav = DEFAULT_NAV }: { nav?: NavSection }) {
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      firstMobileLinkRef.current?.focus();
+      return;
+    }
+
+    menuButtonRef.current?.focus();
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
   return (
@@ -83,9 +105,12 @@ export function SiteHeader({ nav = DEFAULT_NAV }: { nav?: NavSection }) {
 
         {/* ── Mobile Hamburger ── */}
         <button
+          ref={menuButtonRef}
+          type="button"
           className={`${styles.hamburger} ${mobileOpen ? styles.hamburgerOpen : ""}`}
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileOpen}
+          aria-controls="mobile-primary-navigation"
           onClick={() => setMobileOpen((v) => !v)}
         >
           <span />
@@ -96,8 +121,9 @@ export function SiteHeader({ nav = DEFAULT_NAV }: { nav?: NavSection }) {
 
       {/* ── Mobile Panel ── */}
       <div
+        id="mobile-primary-navigation"
         className={`${styles.mobilePanel} ${mobileOpen ? styles.mobilePanelOpen : ""}`}
-        aria-hidden={!mobileOpen}
+        hidden={!mobileOpen}
       >
         <nav aria-label="Mobile primary">
           <ul className={styles.mobileList}>
@@ -108,6 +134,7 @@ export function SiteHeader({ nav = DEFAULT_NAV }: { nav?: NavSection }) {
                 style={{ transitionDelay: `${i * 50}ms` }}
               >
                 <Link
+                  ref={i === 0 ? firstMobileLinkRef : undefined}
                   className={styles.mobileLink}
                   href={l.href}
                   onClick={() => setMobileOpen(false)}

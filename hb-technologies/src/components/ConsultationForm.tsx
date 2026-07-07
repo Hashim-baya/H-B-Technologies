@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import styles from "./ConsultationForm.module.css";
 import marketing from "@/styles/marketing.module.css";
@@ -19,6 +19,19 @@ export function ConsultationForm({
 }) {
   const [status, setStatus] = useState<FormState>({ state: "idle" });
   const [consent, setConsent] = useState(false);
+
+  const statusId = `${source}-form-status`;
+  const privacyErrorId = `${source}-privacy-error`;
+  const isSubmitting = status.state === "submitting";
+  const isSuccess = status.state === "success";
+  const consentError = status.state === "error" && status.message.includes("privacy statement");
+
+  const statusText = useMemo(() => {
+    if (status.state === "submitting") return "Submitting your request.";
+    if (status.state === "success") return status.message;
+    if (status.state === "error") return status.message;
+    return "We respond within 1–2 business days.";
+  }, [status]);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -78,11 +91,14 @@ export function ConsultationForm({
     }
   }
 
-  const isSubmitting = status.state === "submitting";
-  const isSuccess = status.state === "success";
-
   return (
-    <form className={marketing.form} onSubmit={onSubmit} noValidate>
+    <form
+      className={marketing.form}
+      onSubmit={onSubmit}
+      noValidate
+      aria-busy={isSubmitting}
+      aria-describedby={statusId}
+    >
       <div className={marketing.field}>
         <label className={marketing.label} htmlFor={`${source}-name`}>
           Full name
@@ -150,6 +166,7 @@ export function ConsultationForm({
           required
           defaultValue=""
           disabled={isSubmitting}
+          aria-describedby={`${source}-service-help`}
         >
           <option value="" disabled>
             Select one
@@ -171,8 +188,8 @@ export function ConsultationForm({
             Natural Language Processing (NLP)
           </option>
         </select>
-        <div className={marketing.hint}>
-          {"We'll scope requirements, risks, and a delivery plan."}
+        <div className={marketing.hint} id={`${source}-service-help`}>
+          We&apos;ll scope requirements, risks, and a delivery plan.
         </div>
       </div>
 
@@ -198,9 +215,11 @@ export function ConsultationForm({
           onChange={(e) => setConsent(e.target.checked)}
           disabled={isSubmitting}
           className={styles.consentCheckbox}
+          aria-invalid={consentError}
+          aria-describedby={consentError ? privacyErrorId : undefined}
         />
         <label htmlFor={`${source}-consent`} className={styles.consentLabel}>
-          {"I agree to have my information stored for the purpose of responding to my inquiry and providing related updates."}
+          I agree to have my information stored for the purpose of responding to my inquiry and providing related updates.
         </label>
       </div>
 
@@ -220,17 +239,18 @@ export function ConsultationForm({
         )}
       </button>
 
-      {status.state === "success" ? (
-        <div className={`${styles.status} ${styles.success}`}>
-          {status.message}
-        </div>
-      ) : null}
-      {status.state === "error" ? (
-        <div className={`${styles.status} ${styles.error}`}>{status.message}</div>
-      ) : null}
-      {status.state === "idle" ? (
-        <div className={styles.status}>
-          We respond within 1–2 business days.
+      <div
+        id={statusId}
+        className={`${styles.status} ${status.state === "error" ? styles.error : status.state === "success" ? styles.success : ""}`}
+        role={status.state === "error" ? "alert" : "status"}
+        aria-live="polite"
+      >
+        {statusText}
+      </div>
+
+      {consentError ? (
+        <div id={privacyErrorId} className={`${styles.status} ${styles.error}`} role="alert">
+          Please agree to the privacy statement to proceed.
         </div>
       ) : null}
     </form>
