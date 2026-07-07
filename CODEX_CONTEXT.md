@@ -128,6 +128,21 @@ Internal linking architecture optimization:
 - Removed `NEXT_TEST_WASM=1` from `package.json` build scripts to fix Windows/PowerShell build failures.
 - `docs/internal-linking-report.md` provides a comprehensive audit of site hierarchy, crawl paths, page authority distribution, and link inventory.
 
+XML sitemap generation and robots.txt configuration:
+
+- `src/app/sitemap.ts` generates a dynamic XML sitemap with ~25–30 indexable pages (6 static routes + 12 service detail pages + 8+ blog posts).
+- Static routes have priorities assigned: homepage 1.0 (highest), services 0.8, blog 0.7, static pages 0.7.
+- Change frequencies reflect content update patterns: weekly (dynamic content), monthly (services/blog), yearly (forms/contact).
+- Image metadata is included for all service and blog entries pointing to `/og` endpoints for social preview enhancement.
+- Video metadata is included for the homepage hero entry (hero-video.mp4, 15s duration, thumbnail, title, description).
+- Service detail pages are auto-generated from `src/content/services.ts` with image metadata per slug.
+- Blog post pages are auto-generated from Supabase with lastmod derived from post creation date; fallback to static blog data if API unavailable.
+- Production domain (https://www.vizia.co.ke) is used throughout via `getSiteUrl()` with proper fallback chain.
+- `src/app/robots.ts` now includes comprehensive documentation and references `/sitemap.xml` with proper host consolidation (www-version).
+- Excluded pages by design: `/admin` (noindex), `/api/*` (not content), `/blog/external/*` (noindex, external canonical), `/og` (image generation), `/not-found` (error page).
+- Sitemap builds and serves successfully (200 status code confirmed in dev server).
+- `docs/sitemap-report.md` provides comprehensive protocol compliance checklist, metadata documentation, page inventory breakdown, and SEO impact analysis.
+
 ## Implemented Application Features
 
 Frontend pages:
