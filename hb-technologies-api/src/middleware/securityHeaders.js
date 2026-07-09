@@ -1,48 +1,35 @@
 /**
  * Security Headers Middleware
- * Applies recommended security headers for web applications
+ * Applies recommended security headers for API responses.
  */
 
+const { env } = require("../config/env");
+
 function securityHeadersMiddleware(req, res, next) {
-  // Strict Transport Security (HSTS)
-  // Tells browsers to only communicate over HTTPS
-  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
-
-  // X-Content-Type-Options
-  // Prevents MIME sniffing attacks
   res.setHeader("X-Content-Type-Options", "nosniff");
-
-  // X-Frame-Options
-  // Prevents clickjacking attacks
   res.setHeader("X-Frame-Options", "DENY");
-
-  // X-XSS-Protection
-  // Legacy protection for older browsers
   res.setHeader("X-XSS-Protection", "1; mode=block");
-
-  // Referrer-Policy
-  // Controls how much referrer information is shared
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-
-  // Permissions-Policy (formerly Feature-Policy)
-  // Controls which browser features can be used
   res.setHeader(
     "Permissions-Policy",
-    "geolocation=(), microphone=(), camera=(), magnetometer=(), gyroscope=()"
+    "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
   );
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
+  res.setHeader("Cross-Origin-Resource-Policy", "same-site");
+  res.setHeader("Cache-Control", "no-store");
 
-  // Content-Security-Policy (CSP)
-  // Prevents injection attacks
+  if (env.isProd) {
+    res.setHeader(
+      "Strict-Transport-Security",
+      "max-age=31536000; includeSubDomains; preload"
+    );
+  }
+
   const csp =
-    "default-src 'self'; " +
-    "script-src 'self'; " +
-    "style-src 'self' 'unsafe-inline'; " +
-    "img-src 'self' data: https:; " +
-    "font-src 'self'; " +
-    "connect-src 'self'; " +
+    "default-src 'none'; " +
     "frame-ancestors 'none'; " +
-    "base-uri 'self'; " +
-    "form-action 'self'";
+    "base-uri 'none'; " +
+    "form-action 'none'";
   res.setHeader("Content-Security-Policy", csp);
 
   next();

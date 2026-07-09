@@ -38,7 +38,7 @@ function parseOrigins(value) {
     .filter(Boolean);
 }
 
-const env = envSchema.parse({
+const parsed = envSchema.parse({
   NODE_ENV: process.env.NODE_ENV,
   PORT: process.env.PORT,
   CORS_ORIGINS: process.env.CORS_ORIGINS,
@@ -65,6 +65,27 @@ const env = envSchema.parse({
   CONSULTATION_RATE_LIMIT_MAX: process.env.CONSULTATION_RATE_LIMIT_MAX,
   CONSULTATION_RATE_LIMIT_WINDOW: process.env.CONSULTATION_RATE_LIMIT_WINDOW,
 });
+
+const env = parsed;
+
+if (env.NODE_ENV === "production") {
+  const insecureJwtValues = new Set([
+    "change-me-in-production",
+    "changeme",
+    "secret",
+    "jwt-secret",
+  ]);
+
+  if (!env.JWT_SECRET || env.JWT_SECRET.length < 32 || insecureJwtValues.has(env.JWT_SECRET.toLowerCase())) {
+    throw new Error(
+      "JWT_SECRET must be a strong random value of at least 32 characters in production."
+    );
+  }
+
+  if (parseOrigins(env.CORS_ORIGINS).length === 0) {
+    throw new Error("CORS_ORIGINS must be configured with production frontend origins.");
+  }
+}
 
 module.exports = {
   env: {

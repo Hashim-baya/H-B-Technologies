@@ -77,5 +77,14 @@ export function getSiteUrl() {
   url.hash = "";
   url.search = "";
 
+  if (
+    process.env.NODE_ENV === "production" &&
+    (url.hostname === "localhost" || url.hostname === "127.0.0.1")
+  ) {
+    throw new Error(
+      "Production site URL resolved to localhost. Set NEXT_PUBLIC_SITE_URL to the deployed https origin."
+    );
+  }
+
   return url;
 }

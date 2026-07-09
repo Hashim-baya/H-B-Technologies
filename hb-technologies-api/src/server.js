@@ -68,6 +68,14 @@ app.use(csrfProtection);
 
 app.use(apiRouter);
 
+app.use((req, res) => {
+  res.status(404).json({
+    error: "NOT_FOUND",
+    message: "The requested API route does not exist.",
+    requestId: req.id,
+  });
+});
+
 app.use(errorHandler);
 
 app.listen(env.PORT, () => {
