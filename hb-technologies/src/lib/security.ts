@@ -14,7 +14,7 @@ export const API_RATE_LIMIT_MAX_REQUESTS = 40;
 export const MAX_REDIRECT_CHAIN = 5;
 
 export const CONTENT_SECURITY_POLICY = [
-  // Default
+  // Default policy
   "default-src 'self'",
 
   // JavaScript
@@ -25,13 +25,14 @@ export const CONTENT_SECURITY_POLICY = [
     "'unsafe-eval'",
     "https://www.googletagmanager.com",
     "https://www.google-analytics.com",
-    "https://www.clarity.ms",
+    "https://*.clarity.ms",
     "https://bat.bing.com",
     "https://www.youtube.com",
+    "https://www.youtube-nocookie.com",
     "https://www.ytimg.com",
   ].join(" "),
 
-  // CSS
+  // Stylesheets
   [
     "style-src",
     "'self'",
@@ -49,9 +50,10 @@ export const CONTENT_SECURITY_POLICY = [
     "https://images.unsplash.com",
     "https://www.google-analytics.com",
     "https://www.googletagmanager.com",
-    "https://www.clarity.ms",
+    "https://*.clarity.ms",
     "https://bat.bing.com",
     "https://www.youtube.com",
+    "https://www.youtube-nocookie.com",
     "https://www.ytimg.com",
   ].join(" "),
 
@@ -62,26 +64,27 @@ export const CONTENT_SECURITY_POLICY = [
     "https://fonts.gstatic.com",
   ].join(" "),
 
-  // API / Analytics connections
+  // AJAX / Fetch / WebSocket connections
   [
     "connect-src",
     "'self'",
     "https://*.supabase.co",
+    "wss://*.supabase.co",
     "https://www.google-analytics.com",
     "https://www.googletagmanager.com",
-    "https://www.clarity.ms",
     "https://*.clarity.ms",
     "https://bat.bing.com",
     "https://api.dev.to",
   ].join(" "),
 
-  // Video
+  // Video / Audio
   [
     "media-src",
     "'self'",
     "blob:",
     "https:",
     "https://www.youtube.com",
+    "https://www.youtube-nocookie.com",
   ].join(" "),
 
   // Embedded frames
@@ -97,11 +100,26 @@ export const CONTENT_SECURITY_POLICY = [
     "child-src",
     "'self'",
     "https://www.youtube.com",
+    "https://www.youtube-nocookie.com",
+  ].join(" "),
+
+  // Web Workers
+  [
+    "worker-src",
+    "'self'",
+    "blob:",
+  ].join(" "),
+
+  // Manifest
+  [
+    "manifest-src",
+    "'self'",
   ].join(" "),
 
   "form-action 'self'",
   "base-uri 'self'",
   "frame-ancestors 'none'",
+  "object-src 'none'",
   "upgrade-insecure-requests",
 ].join("; ");
 
