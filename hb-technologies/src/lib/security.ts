@@ -14,15 +14,91 @@ export const API_RATE_LIMIT_MAX_REQUESTS = 40;
 export const MAX_REDIRECT_CHAIN = 5;
 
 export const CONTENT_SECURITY_POLICY = [
+  // Default
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.google-analytics.com *.googletagmanager.com *.youtube.com *.ytimg.com",
-  "style-src 'self' 'unsafe-inline' fonts.googleapis.com",
-  "img-src 'self' data: https: blob: *.google-analytics.com *.googletagmanager.com *.ytimg.com *.youtube.com images.unsplash.com",
-  "font-src 'self' fonts.gstatic.com",
-  "connect-src 'self' *.supabase.co *.google-analytics.com *.googletagmanager.com api.dev.to",
-  "media-src 'self' *.youtube.com https: blob:",
-  "frame-src 'self' *.youtube.com",
-  "child-src 'self' *.youtube.com",
+
+  // JavaScript
+  [
+    "script-src",
+    "'self'",
+    "'unsafe-inline'",
+    "'unsafe-eval'",
+    "https://www.googletagmanager.com",
+    "https://www.google-analytics.com",
+    "https://www.clarity.ms",
+    "https://bat.bing.com",
+    "https://www.youtube.com",
+    "https://www.ytimg.com",
+  ].join(" "),
+
+  // CSS
+  [
+    "style-src",
+    "'self'",
+    "'unsafe-inline'",
+    "https://fonts.googleapis.com",
+  ].join(" "),
+
+  // Images
+  [
+    "img-src",
+    "'self'",
+    "data:",
+    "blob:",
+    "https:",
+    "https://images.unsplash.com",
+    "https://www.google-analytics.com",
+    "https://www.googletagmanager.com",
+    "https://www.clarity.ms",
+    "https://bat.bing.com",
+    "https://www.youtube.com",
+    "https://www.ytimg.com",
+  ].join(" "),
+
+  // Fonts
+  [
+    "font-src",
+    "'self'",
+    "https://fonts.gstatic.com",
+  ].join(" "),
+
+  // API / Analytics connections
+  [
+    "connect-src",
+    "'self'",
+    "https://*.supabase.co",
+    "https://www.google-analytics.com",
+    "https://www.googletagmanager.com",
+    "https://www.clarity.ms",
+    "https://*.clarity.ms",
+    "https://bat.bing.com",
+    "https://api.dev.to",
+  ].join(" "),
+
+  // Video
+  [
+    "media-src",
+    "'self'",
+    "blob:",
+    "https:",
+    "https://www.youtube.com",
+  ].join(" "),
+
+  // Embedded frames
+  [
+    "frame-src",
+    "'self'",
+    "https://www.youtube.com",
+    "https://www.youtube-nocookie.com",
+  ].join(" "),
+
+  // Child frames
+  [
+    "child-src",
+    "'self'",
+    "https://www.youtube.com",
+  ].join(" "),
+
   "form-action 'self'",
   "base-uri 'self'",
   "frame-ancestors 'none'",
