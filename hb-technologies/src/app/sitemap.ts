@@ -62,28 +62,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: route.priority,
     };
 
-    // Add image metadata for social preview images
-    if (route.path === "" || route.path === "/blog") {
-      (entry as any).images = [
-        new URL("/og?type=default", base).toString(),
-      ];
-    }
-
-    // Add video metadata for homepage hero
-    if (route.path === "") {
-      (entry as any).videos = [
-        {
-          content_url: new URL("/videos/hero-video.mp4", base).toString(),
-          player_url: new URL("/", base).toString(),
-          title: "VIZIA Technologies - Secure by Design",
-          description:
-            "Secure-by-design engineering, AI-driven automation, and enterprise-grade infrastructure — built for teams that cannot afford downtime.",
-          thumbnail_url: new URL("/og?type=default", base).toString(),
-          duration: 15,
-          upload_date: new Date("2025-01-01").toISOString(),
-        },
-      ];
-    }
 
     return entry;
   });
@@ -101,12 +79,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   for (const slug of serviceSlugs) {
-    entries.push({
+      entries.push({
       url: new URL(`/services/${slug}`, base).toString(),
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.8,
-      images: [new URL(`/og?type=service&slug=${slug}`, base).toString()],
     });
   }
 
@@ -121,7 +98,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: p.created_at ? new Date(p.created_at) : now,
       changeFrequency: "monthly",
       priority: 0.6,
-      images: [new URL(`/og?type=article&slug=${p.slug}`, base).toString()],
     });
   }
 
