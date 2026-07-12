@@ -4,7 +4,10 @@ import {
   HSTS_HEADER_VALUE,
   SECURITY_HEADER_ENTRIES,
 } from "./src/lib/security";
-import { SERVICE_REDIRECTS, TEMPORARY_REDIRECTS } from "./src/lib/url-governance";
+import {
+  SERVICE_REDIRECTS,
+  TEMPORARY_REDIRECTS,
+} from "./src/lib/url-governance";
 
 const globalSecurityHeaders = [
   ...SECURITY_HEADER_ENTRIES,
@@ -20,67 +23,119 @@ const noCacheHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   trailingSlash: false,
-  skipProxyUrlNormalize: true,
   skipTrailingSlashRedirect: true,
-  outputFileTracingRoot: process.cwd(),
   compress: true,
 
   async headers() {
     return [
+      // Global security headers
       {
         source: "/(.*)",
         headers: globalSecurityHeaders,
       },
-      {
-        source: "/_next/static/:path*",
-        headers: [{ key: "Cache-Control", value: CACHE_HEADERS.static }],
-      },
+
+      // Static assets (excluding Next.js internal assets)
       {
         source: "/videos/:path*",
-        headers: [{ key: "Cache-Control", value: CACHE_HEADERS.static }],
+        headers: [
+          {
+            key: "Cache-Control",
+            value: CACHE_HEADERS.static,
+          },
+        ],
       },
       {
         source: "/favicon.ico",
-        headers: [{ key: "Cache-Control", value: CACHE_HEADERS.static }],
+        headers: [
+          {
+            key: "Cache-Control",
+            value: CACHE_HEADERS.static,
+          },
+        ],
       },
+
+      // API endpoints
       {
         source: "/api/:path*",
         headers: [
           ...noCacheHeaders,
-          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive",
+          },
         ],
       },
+
+      // Admin area
       {
         source: "/admin/:path*",
         headers: [
           ...noCacheHeaders,
-          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" },
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow, noarchive",
+          },
         ],
       },
+
+      // Open Graph image generator
       {
         source: "/og",
         headers: [
-          { key: "Cache-Control", value: CACHE_HEADERS.og },
-          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          {
+            key: "Cache-Control",
+            value: CACHE_HEADERS.og,
+          },
+          {
+            key: "X-Robots-Tag",
+            value: "noindex, nofollow",
+          },
+        ],
+      },
+
+      // SEO files
+      {
+        source: "/robots.txt",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: CACHE_HEADERS.seo,
+          },
         ],
       },
       {
-        source: "/robots.txt",
-        headers: [{ key: "Cache-Control", value: CACHE_HEADERS.seo }],
-      },
-      {
         source: "/sitemap.xml",
-        headers: [{ key: "Cache-Control", value: CACHE_HEADERS.seo }],
+        headers: [
+          {
+            key: "Cache-Control",
+            value: CACHE_HEADERS.seo,
+          },
+        ],
       },
+
+      // Public pages
       {
         source: "/((?!api|admin|_next|og).*)",
-        headers: [{ key: "Cache-Control", value: CACHE_HEADERS.page }],
+        headers: [
+          {
+            key: "Cache-Control",
+            value: CACHE_HEADERS.page,
+          },
+        ],
       },
+
+      // Well-known endpoints
       {
         source: "/.well-known/:path*",
         headers: [
-          { key: "Access-Control-Allow-Origin", value: "*" },
-          { key: "Cache-Control", value: CACHE_HEADERS.seo },
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Cache-Control",
+            value: CACHE_HEADERS.seo,
+          },
         ],
       },
     ];
