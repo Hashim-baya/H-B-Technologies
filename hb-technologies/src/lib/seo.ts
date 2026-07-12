@@ -198,6 +198,13 @@ export function createPageMetadata(input: PageMetadataInput): Metadata {
 }
 
 export function createRootMetadata(): Metadata {
+  // ─── Search Engine Verification ──────────────────────────────────────────
+  // Set NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION in your environment to activate.
+  // Set NEXT_PUBLIC_BING_SITE_VERIFICATION in your environment to activate.
+  // Never hard-code these values — use environment variables.
+  const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
+  const bingVerification = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION;
+
   return {
     ...createPageMetadata({
       title: "VIZIA Technologies | Secure Software, AI & Cybersecurity",
@@ -213,6 +220,16 @@ export function createRootMetadata(): Metadata {
       default: "VIZIA Technologies | Secure Software, AI & Cybersecurity",
       template: `%s | ${siteConfig.name}`,
     },
+    // Renders: <meta name="google-site-verification" content="..." />
+    // Renders: <meta name="msvalidate.01" content="..." />
+    ...(googleVerification || bingVerification
+      ? {
+          verification: {
+            ...(googleVerification ? { google: googleVerification } : {}),
+            ...(bingVerification ? { other: { "msvalidate.01": bingVerification } } : {}),
+          },
+        }
+      : {}),
   };
 }
 
