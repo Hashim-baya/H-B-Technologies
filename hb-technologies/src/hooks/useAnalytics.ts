@@ -19,8 +19,8 @@ import {
   getAnalyticsService,
   AnalyticsOptions,
   ConsentSettings,
-} from "./analytics-service";
-import { ANALYTICS_EVENTS } from "./analytics-config";
+} from "@/lib/analytics-service";
+import { ANALYTICS_EVENTS } from "@/lib/analytics-config";
 
 /**
  * useAnalytics Hook

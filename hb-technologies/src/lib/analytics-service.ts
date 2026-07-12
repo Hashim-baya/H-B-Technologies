@@ -24,8 +24,16 @@ import {
 } from "./analytics-config";
 
 // ============================================================
-// TYPES
+// TYPES & DECLARATIONS
 // ============================================================
+
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+    dataLayer?: any[];
+    clarity?: (...args: any[]) => void;
+  }
+}
 
 export interface AnalyticsEvent {
   name: string;
@@ -119,16 +127,18 @@ class AnalyticsService {
       script.async = true;
       script.src = `https://www.googletagmanager.com/gtag/js?id=${GA4_CONFIG.trackingId}`;
 
-      window.dataLayer = window.dataLayer || [];
+      if (!window.dataLayer) {
+        window.dataLayer = [];
+      }
 
       // Define gtag function
-      (window as any).gtag = function (...args: any[]) {
-        window.dataLayer.push(arguments);
+      window.gtag = function (...args: any[]) {
+        window.dataLayer?.push(arguments);
       };
 
       // Initialize gtag
-      (window as any).gtag("js", new Date());
-      (window as any).gtag("config", GA4_CONFIG.trackingId, {
+      window.gtag("js", new Date());
+      window.gtag("config", GA4_CONFIG.trackingId, {
         send_page_view: false, // We'll handle page views manually
         anonymize_ip: ANALYTICS_CONFIG.anonymizeIP,
         allow_google_signals: false,
@@ -154,7 +164,9 @@ class AnalyticsService {
       script.async = true;
       script.src = `https://www.googletagmanager.com/gtm.js?id=${GTM_CONFIG.containerId}`;
 
-      window.dataLayer = window.dataLayer || [];
+      if (!window.dataLayer) {
+        window.dataLayer = [];
+      }
 
       // Push initial events
       window.dataLayer.push({
@@ -177,12 +189,15 @@ class AnalyticsService {
     if (!CLARITY_CONFIG.projectId) return;
 
     try {
-      (window as any).clarity =
+      window.clarity =
         window.clarity ||
         function (...args: any[]) {
-          (window as any).clarity.q.push(args);
+          if (!window.clarity) return;
+          (window.clarity as any).q?.push(args);
         };
-      (window as any).clarity.q = [];
+      if (!(window.clarity as any).q) {
+        (window.clarity as any).q = [];
+      }
 
       const script = document.createElement("script");
       script.async = true;
@@ -244,8 +259,8 @@ class AnalyticsService {
       this.recordEventHistory(eventName, parameters);
 
       // Track to GA4
-      if (this.canTrack("analytics") && (window as any).gtag) {
-        (window as any).gtag("event", eventName, event.parameters);
+      if (this.canTrack("analytics") && window.gtag) {
+        window.gtag("event", eventName, event.parameters);
       }
 
       // Track to GTM
@@ -257,8 +272,8 @@ class AnalyticsService {
       }
 
       // Track to Clarity
-      if (this.canTrack("analytics") && (window as any).clarity) {
-        (window as any).clarity("set", eventName, JSON.stringify(event.parameters));
+      if (this.canTrack("analytics") && window.clarity) {
+        window.clarity("set", eventName, JSON.stringify(event.parameters));
       }
 
       this.logDebug(`Event tracked: ${eventName}`, event.parameters);
@@ -423,8 +438,8 @@ class AnalyticsService {
     this.saveConsentToStorage();
 
     // Update GA4 consent settings
-    if ((window as any).gtag && this.consent.analytics) {
-      (window as any).gtag("consent", "update", {
+    if (window.gtag && this.consent.analytics) {
+      window.gtag("consent", "update", {
         analytics_storage: this.consent.analytics ? "granted" : "denied",
         marketing_storage: this.consent.marketing ? "granted" : "denied",
       });
